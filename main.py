@@ -38,24 +38,25 @@ def aufraeumen():
         print("Gut, keine Aufraeumarbeiten notwenig...")
 
 def lade_alt():
-    f = open('nicht_loeschen.txt', 'r').split(';')
+    f = open('nicht_loeschen.txt', 'r').read().replace('\n', '').split(';')
     alt = {}
-    i = alt.len()
-    j = 0
-    while j < i:
-        alt[f[j]] = int(f[j+1])
-        j += 1
+    # f-1: f wird wahrscheinlich so enden: ['fach', 'wert', ''], da das letzte ; einfach abgehackt wurde
+    for i in range(0, len(f)-1, 2):
+        alt[str(f[i])] = int(f[i+1])
     return alt
 
 def lade_neu():
     neu = {}
-    for datei in os.scandir('Download'):
-        neu[str(datei)] = os.stat(datei).st_size
+    os.chdir('Download')
+    for datei in os.listdir('.'):
+        neu[str(datei)] = int(os.stat(datei).st_size)
+    os.chdir('..')
+    return neu
 
 def update_datei(dictio):
     f = open('nicht_loeschen.txt', 'w')
     for fach, groesse in dictio.items():
-        f.write(str(fach) + ";" + str(groesse))
+        f.write(str(fach) + ";" + str(groesse) + ";")
 
 def check_neu():
     alt = lade_alt()
@@ -63,15 +64,14 @@ def check_neu():
     neue_aufgaben = False
 
     for fach, groesse in neu.items():
-        if not fach in alt:
-            print("Neues fach entdeckt: " + fach)
-        else:
-            if alt.get(fach) < neu.get(fach):
-                print("Neue Aufgaben in Fach " + fach)
-                neue_aufgaben = True
+        # aus irgendeinem grund muessen wir dem python interpreter auch hier weis machen, das es sich hier um 2 ints handelt...
+        if int(alt.get(fach)) < int(neu.get(fach)):
+            print("Neue Aufgaben in Fach " + fach)
+            neue_aufgaben = True
 
     if neue_aufgaben:
         update_datei(neu)
+    return neue_aufgaben
 
 
 try:
@@ -92,7 +92,8 @@ zipdatei = ZipFile('zipdatei.zip')
 zipdatei.extractall()
 
 # checken
-check_neu()
+if not check_neu():
+    print('Keine neuen Aufgaben, Glueckspilz!')
 
 # und ein bisschen aufraeumen
 os.unlink('zipdatei.zip')
