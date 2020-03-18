@@ -15,6 +15,9 @@ Replace `(open('LINK.txt')...) ,` with the link.
 Option 2:
 Paste the link in a file called `LINK.txt` in the same directory as the script.
 
+# Recommendation
+Queue it as a service that goes every hour or so. You won't miss any updates. Question is if you want to xD
+
 ## Tool written in Python to notify the user about new exercises/news from their teachers.
 Here in Rheinland-Pfalz, Germany, we've got a service called 'Schulbox'. It's basically a cloud (based on Nextcloud, I think), which allows
 teachers to upload school materials like exercises as files, so that students can easily access it.

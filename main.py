@@ -19,7 +19,7 @@ def loesche_ordner_oder_inhalte_wenn_voll(ordner):
             # ... und versuchen es nochmal
             loesche_ordner_oder_inhalte_wenn_voll(ordner)
         except Exception as ee:
-            print("Scheisse. War bestimmt Hr. Aumann der auf die Idee kam, geschachtelte Verzeichnisse zu erstellen? xD Versuch doch mal, es selbst zu fixen :D oder schreib mir wenn du keinen Bock hast.")
+            print("Och ne, error: " + str(ee))
 
 def aufraeumen():
     try:
@@ -34,8 +34,6 @@ def aufraeumen():
                 print("Ja, keine Ahnung was das ist...")
         # die zipdatei erstellt ein verzeichnis namens download, das kann auch weg...
         os.rmdir('Download')
-        # die alte zipdatei kann auch weg
-        os.unlink('zipdatei.zip')
     except Exception as e:
         print("Gut, keine Aufraeumarbeiten notwenig...")
 
@@ -47,8 +45,6 @@ except Exception as e:
     print('Die Datei \"nicht_loeschen.txt\" bitte wirklich nicht loeschen xD')
     open('nicht_loeschen.txt', 'w+').write(str('0'))
 
-# erstmal aufraeumen, alle dateien die zuvor in dem verzeichnis waren loeschen (falls vorhanden)
-aufraeumen()
 
 # jetzt koennen wir die zip runterladen und speichern:
 zip_datei = urllib.request.urlretrieve(open('LINK.txt').read().replace('\n', ''), 'zipdatei.zip')
@@ -61,6 +57,7 @@ gr_zipd_neu = os.stat('zipdatei.zip').st_size
 # behaupten dass es neue aufgaben gibt, nur dann muessen wir sie auch entzippen, ansonsten loeschen
 # wir sie wieder :)
 if gr_zipd_alt < gr_zipd_neu:
+    aufraeumen()
     print('Es gibt neue Aufgaben! Packe sie dir in den Ordner \"Download\" aus...')
     zipdatei = ZipFile('zipdatei.zip')
     zipdatei.extractall()
@@ -69,5 +66,5 @@ if gr_zipd_alt < gr_zipd_neu:
     # die zipdatei kann jetzt weg
     os.unlink('zipdatei.zip')
 else:
-    print('Es gibt keine neuen Aufgaben! Loesche den ganzen alten Krempel mal...')
-    aufraeumen()
+    print('Es gibt keine neuen Aufgaben!')
+    os.unlink('zipdatei.zip')
