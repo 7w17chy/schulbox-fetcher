@@ -37,7 +37,43 @@ def aufraeumen():
     except Exception as e:
         print("Gut, keine Aufraeumarbeiten notwenig...")
 
-# HIER GEHTS LOS
+def lade_alt():
+    f = open('nicht_loeschen.txt', 'r').split(';')
+    alt = {}
+    i = alt.len()
+    j = 0
+    while j < i:
+        alt[f[j]] = int(f[j+1])
+        j += 1
+    return alt
+
+def lade_neu():
+    neu = {}
+    for datei in os.scandir('Download'):
+        neu[str(datei)] = os.stat(datei).st_size
+
+def update_datei(dictio):
+    f = open('nicht_loeschen.txt', 'w')
+    for fach, groesse in dictio.items():
+        f.write(str(fach) + ";" + str(groesse))
+
+def check_neu():
+    alt = lade_alt()
+    neu = lade_neu()
+    neue_aufgaben = False
+
+    for fach, groesse in neu.items():
+        if not fach in alt:
+            print("Neues fach entdeckt: " + fach)
+        else:
+            if alt.get(fach) < neu.get(fach):
+                print("Neue Aufgaben in Fach " + fach)
+                neue_aufgaben = True
+
+    if neue_aufgaben:
+        update_datei(neu)
+
+
 try:
     open('nicht_loeschen.txt')
     print('Cool, du hast die Datei also nicht geloescht :D')
@@ -45,26 +81,18 @@ except Exception as e:
     print('Die Datei \"nicht_loeschen.txt\" bitte wirklich nicht loeschen xD')
     open('nicht_loeschen.txt', 'w+').write(str('0'))
 
+# ein bisschen sauber machen
+aufraeumen()
 
 # jetzt koennen wir die zip runterladen und speichern:
 zip_datei = urllib.request.urlretrieve(open('LINK.txt').read().replace('\n', ''), 'zipdatei.zip')
 
-# wir holen uns die groesse der alten zipdatei und der neuen:
-gr_zipd_alt = int(open('nicht_loeschen.txt', 'r').read().replace('\n', ''))
-gr_zipd_neu = os.stat('zipdatei.zip').st_size
+# auspacken
+zipdatei = ZipFile('zipdatei.zip')
+zipdatei.extractall()
 
-# wir vergleichen die alte und die neue: wenn die neue groesser ist als die alte, dann koennen wir
-# behaupten dass es neue aufgaben gibt, nur dann muessen wir sie auch entzippen, ansonsten loeschen
-# wir sie wieder :)
-if gr_zipd_alt < gr_zipd_neu:
-    aufraeumen()
-    print('Es gibt neue Aufgaben! Packe sie dir in den Ordner \"Download\" aus...')
-    zipdatei = ZipFile('zipdatei.zip')
-    zipdatei.extractall()
-    # die neue zipdatei ist jetzt die alte. wir muessen noch ihre groesse in die datei 'nicht_loeschen.txt' schreiben ('w' ueberschreibt)
-    open('nicht_loeschen.txt', 'w').write(str(gr_zipd_neu))
-    # die zipdatei kann jetzt weg
-    os.unlink('zipdatei.zip')
-else:
-    print('Es gibt keine neuen Aufgaben!')
-    os.unlink('zipdatei.zip')
+# checken
+check_neu()
+
+# und ein bisschen aufraeumen
+os.unlink('zipdatei.zip')
