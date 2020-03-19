@@ -1,4 +1,4 @@
-# Dieses script laedt eine zip-datei von schulbox.bildung.rlp.de herunter, unzipt sie, und vergleicht ihre groesse mit 
+# Dieses script laedt eine zip-datei von schulbox.bildung.rlp.de herunter, unzipt sie, und vergleicht ihre groesse mit
 # der der zuvor heruntergeladenen datei. sollte sich die groesse veraendert haben, ist klar, dass es neue aufgaben gibt.
 # natuerlich werden bei erneutem ausfuehren des scriptes alle "alten" dateien geloescht.
 #
@@ -34,8 +34,20 @@ def aufraeumen():
                 print("Ja, keine Ahnung was das ist...")
         # die zipdatei erstellt ein verzeichnis namens download, das kann auch weg...
         os.rmdir('Download')
+        os.unlink('zipdatei.zip')
     except Exception as e:
         print("Gut, keine Aufraeumarbeiten notwenig...")
+
+# Danke windoof, dass du nicht einfach, so wie linux, die groesse von verzeichnissen angeben kannst!
+# mal ganz ehrlich, fvck u!
+def berechne_ordnergr(ordn):
+    sum = 0
+    for f in os.listdir(ordn):
+        if os.path.isdir(f):
+            sum += berechne_ordnergr(os.path.join(ordn, f))
+        else:
+            sum += os.lstat(os.path.join(ordn, f)).st_size
+    return sum
 
 def lade_alt():
     f = open('nicht_loeschen.txt', 'r').read().replace('\n', '').split(';')
@@ -49,7 +61,10 @@ def lade_neu():
     neu = {}
     os.chdir('Download')
     for datei in os.listdir('.'):
-        neu[str(datei)] = int(os.stat(datei).st_size)
+        if os.path.isdir(datei):
+            neu[str(datei)] = berechne_ordnergr(datei)
+        else:
+            neu[str(datei)] = gr
     os.chdir('..')
     return neu
 
@@ -70,7 +85,7 @@ def check_neu():
 
     try:
         for fach, groesse in neu.items():
-            # aus irgendeinem grund muessen wir dem python interpreter auch hier weis machen, 
+            # aus irgendeinem grund muessen wir dem python interpreter auch hier weis machen,
             # dass es sich hier um 2 ints handelt...
             if int(alt[fach]) < int(neu[fach]):
                 print("Neue Aufgaben in Fach " + fach + "!")
@@ -78,6 +93,7 @@ def check_neu():
     # vielleicht hat der user die datei 'nicht_loeschen.txt' geloescht oder fuehrt das Programm zum
     # ersten mal aus:
     except KeyError as ke:
+        print("update null: " + str(ke))
         update_null(neu)
         # jetzt haben wir auch was zum vergleichen in der Datei :D nochmal probieren...
         return check_neu()
@@ -105,8 +121,10 @@ zipdatei = ZipFile('zipdatei.zip')
 zipdatei.extractall()
 
 # checken
-if check_neu() == False:
+ergeb = check_neu()
+if ergeb == False:
     print('Keine neuen Aufgaben, Glueckspilz!')
-
+    
+#print("Groesse der zip: " + str(os.stat('zipdatei.zip').st_size))
 # und ein bisschen aufraeumen
-os.unlink('zipdatei.zip')
+#os.unlink('zipdatei.zip')
