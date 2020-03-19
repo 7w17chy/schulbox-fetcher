@@ -1,5 +1,6 @@
 # There's a probably pretty bad English translation/explanation further down :) 
 # schulbox-fetcher: Lass dich per Tastendruck über neue Aufgaben informieren :D
+# Neue Aufgaben werden in neuem Browsertab geöffnet!
 Du hast auch keinen Bock alle paar Stunden auf schulbox.bildung-rp.de zu gehen und in jedem Ornder nachzuschauen,
 ob die Lehrer mal wieder was hochgeladen haben? Gut zu verstehen. Dieses Script macht genau das für dich:
 Es lädt eine ZIP von Schulbox runter, entpackt sie, und vergleicht die Größen der frisch heruntergeladenen Ordner

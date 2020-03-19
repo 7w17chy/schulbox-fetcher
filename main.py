@@ -5,7 +5,7 @@
 # coming soon:
 #  - anzeigen welche dateien neu sind/wo sich etw. veraendert hat
 
-import os, urllib.request
+import os, urllib.request, webbrowser
 from zipfile import ZipFile
 
 def loesche_ordner_oder_inhalte_wenn_voll(ordner):
@@ -123,3 +123,6 @@ zipdatei.extractall()
 ergeb = check_neu()
 if ergeb == False:
     print('Keine neuen Aufgaben, Glueckspilz!')
+else:
+    url = os.path.join(os.getcwd(), 'Download')
+    webbrowser.open(url, new=2)
