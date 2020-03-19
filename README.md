@@ -20,14 +20,15 @@ Fertig!
 python3 main.py
 ```
 
-Sollte den Rest für dich erledigen ^^ Wenn sich Python beschwert dass es einige Bibliotheken vermisst:
+Sollte den Rest für dich erledigen ^^ Wenn du prüfen möchtest, ob neue Aufgaben verfügbar sind, führe das Script einfach erneut aus :D
+Wenn sich Python beschwert dass es einige Bibliotheken vermisst:
 
 ```sh
 pip3 install zipfile urllib
 ```
 
 # Warum nur schulbox.bildung-rp.de?
-Weil dieses Script ein schnell hingeschmiertes ist. Momentan ist alles sehr auf Schulbox fixiert (Pfade sind hardgecodet etc.),
+Weil dieses Script ein schnell Hingeschmiertes ist. Momentan ist alles sehr auf Schulbox fixiert (Pfade sind hardgecodet etc.),
 aber das wird sich sicherlich bald ändern :) Wenn du Zeit und Lust hast, kannst du gerne eine Pull Request mit deinen Verbesserungen
 einreichen :D
 
