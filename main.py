@@ -58,16 +58,29 @@ def update_datei(dictio):
     for fach, groesse in dictio.items():
         f.write(str(fach) + ";" + str(groesse) + ";")
 
+def update_null(dictio):
+    f = open('nicht_loeschen.txt', 'w')
+    for fach, groesse in dictio.items():
+        f.write(str(fach) + ";" + str(0) + ";")
+
 def check_neu():
     alt = lade_alt()
     neu = lade_neu()
     neue_aufgaben = False
 
-    for fach, groesse in neu.items():
-        # aus irgendeinem grund muessen wir dem python interpreter auch hier weis machen, das es sich hier um 2 ints handelt...
-        if int(alt.get(fach)) < int(neu.get(fach)):
-            print("Neue Aufgaben in Fach " + fach)
-            neue_aufgaben = True
+    try:
+        for fach, groesse in neu.items():
+            # aus irgendeinem grund muessen wir dem python interpreter auch hier weis machen, 
+            # dass es sich hier um 2 ints handelt...
+            if int(alt[fach]) < int(neu[fach]):
+                print("Neue Aufgaben in Fach " + fach + "!")
+                neue_aufgaben = True
+    # vielleicht hat der user die datei 'nicht_loeschen.txt' geloescht oder fuehrt das Programm zum
+    # ersten mal aus:
+    except KeyError as ke:
+        update_null(neu)
+        # jetzt haben wir auch was zum vergleichen in der Datei :D nochmal probieren...
+        return check_neu()
 
     if neue_aufgaben:
         update_datei(neu)
@@ -76,7 +89,7 @@ def check_neu():
 
 try:
     open('nicht_loeschen.txt')
-    print('Cool, du hast die Datei also nicht geloescht :D')
+    print('Cool, du hast die Datei also nicht geloescht :D Danke!')
 except Exception as e:
     print('Die Datei \"nicht_loeschen.txt\" bitte wirklich nicht loeschen xD')
     open('nicht_loeschen.txt', 'w+').write(str('0'))
@@ -92,7 +105,7 @@ zipdatei = ZipFile('zipdatei.zip')
 zipdatei.extractall()
 
 # checken
-if not check_neu():
+if check_neu() == False:
     print('Keine neuen Aufgaben, Glueckspilz!')
 
 # und ein bisschen aufraeumen
