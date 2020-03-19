@@ -93,7 +93,6 @@ def check_neu():
     # vielleicht hat der user die datei 'nicht_loeschen.txt' geloescht oder fuehrt das Programm zum
     # ersten mal aus:
     except KeyError as ke:
-        print("update null: " + str(ke))
         update_null(neu)
         # jetzt haben wir auch was zum vergleichen in der Datei :D nochmal probieren...
         return check_neu()
@@ -124,7 +123,3 @@ zipdatei.extractall()
 ergeb = check_neu()
 if ergeb == False:
     print('Keine neuen Aufgaben, Glueckspilz!')
-    
-#print("Groesse der zip: " + str(os.stat('zipdatei.zip').st_size))
-# und ein bisschen aufraeumen
-#os.unlink('zipdatei.zip')
