@@ -1,30 +1,42 @@
-# German students: Please read on!
-# Why the fvck are all variable names and `print()` outputs in German?
-Schulbox is a German-only service (maybe it's even limited to Rheinland-Pfalz), as far as I know. If not, please correct me and I'll translate it.
+# There's a probably pretty bad English translation/explanation further down :) 
+# schulbox-fetcher: Lass dich per Tastendruck über neue Aufgaben informieren :D
+Du hast auch keinen Bock alle paar Stunden auf schulbox.bildung-rp.de zu gehen und in jedem Ornder nachzuschauen,
+ob die Lehrer mal wieder was hochgeladen haben? Gut zu verstehen. Dieses Script macht genau das für dich:
+Es lädt eine ZIP von Schulbox runter, entpackt sie, und vergleicht die Größen der frisch heruntergeladenen Ordner
+mit denen der alten Ordner. Daran lässt sich feststellen, wo's neue Aufgaben gibt :)
+Alles was du machen musst ist folgendes:
 
-# Make this shovelware work
-Go to schulbox.bildung-rp.de, log in, and rightclick on 'Download all files'. You have two options:
-
-Option 1: Copy the link and paste it directly in the script
+1. Gehe zu schulbox.bildung-rp.de 
+2. Rechtsklick auf `Download all files`, Link kopieren
+3. Den Link entweder in eine Datei namens `LINK.txt` oder direkt ins Script einfügen:
 
 ```python
+# open(...).read().replace(..) durch den Link in einfachen Anführungszeichen ersetzen
 zip_datei = urllib.request.urlretrieve(open('LINK.txt').read().replace('\n', ''), 'zipdatei.zip')
 ```
-Replace `(open('LINK.txt')...) ,` with the link.
+Fertig!
 
-Option 2:
-Paste the link in a file called `LINK.txt` in the same directory as the script.
+```sh
+python3 main.py
+```
 
-# Recommendation
-Queue it as a service that goes every hour or so. You won't miss any updates. Question is if you want to xD
+Sollte den Rest für dich erledigen ^^ Wenn sich Python beschwert dass es einige Bibliotheken vermisst:
 
-## Tool written in Python to notify the user about new exercises/news from their teachers.
+```sh
+pip3 install zipfile urllib
+```
+
+# Warum nur schulbox.bildung-rp.de?
+Weil dieses Script ein schnell hingeschmiertes ist. Momentan ist alles sehr auf Schulbox fixiert (Pfade sind hardgecodet etc.),
+aber das wird sich sicherlich bald ändern :) Wenn du Zeit und Lust hast, kannst du gerne eine Pull Request mit deinen Verbesserungen
+einreichen :D
+
+# Tool written in Python to notify the user about new exercises/news from their teachers.
 Here in Rheinland-Pfalz, Germany, we've got a service called 'Schulbox'. It's basically a cloud (based on Nextcloud, I think), which allows
 teachers to upload school materials like exercises as files, so that students can easily access it.
 It is/was (depending on when you read it xD) heavily used during the corona crisis. Since it's really annoying to go to that website and search
-through all folders to check whether new materials were uploaded or not. This script does take some work from you, but not all: for now, it only tells you that there are new materials; by comparing the size of the downloaded zip file.
-
-# But hold up, I'll add more functionality ASAP! Probably tomorrow. You could of course just extend it yourself (and submit a pullrequest, if you so please).
-
-# Why is it written in Python?
-Well, for simplicity's sake and because many students in Germany learn/know Python.
+through all folders to check whether new materials were uploaded or not, we/I wrote this script that downloads a zipfile from that service,
+unpacks it and then compares the sizes of the folders with the sizes of the folders from a previous run and notifys you, whenever it detects
+a larger folder size: there must be new material in that folder!
+This tool currently only supports Schulbox, but it should also be capable of other services, if you want to help to add support for others too,
+please send me a PM or make a pull request.

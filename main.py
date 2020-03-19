@@ -5,7 +5,7 @@
 # coming soon:
 #  - anzeigen welche dateien neu sind/wo sich etw. veraendert hat
 
-import os, shutil, urllib.request
+import os, urllib.request
 from zipfile import ZipFile
 
 def loesche_ordner_oder_inhalte_wenn_voll(ordner):
